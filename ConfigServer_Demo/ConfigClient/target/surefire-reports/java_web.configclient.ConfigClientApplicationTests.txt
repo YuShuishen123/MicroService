@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: java_web.configclient.ConfigClientApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.933 s -- in java_web.configclient.ConfigClientApplicationTests

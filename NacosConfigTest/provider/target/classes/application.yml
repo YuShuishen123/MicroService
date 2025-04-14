@@ -1,0 +1,29 @@
+server:
+  port: 2526
+spring:
+  profiles:
+    active: dev
+  application:
+    name: provider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.127.142:8848
+        namespace: ac169f42-69b0-4dea-be4f-c43848d5d115
+        service: ${spring.application.name}
+        group: cloudTest
+      config:
+        server-addr: 192.168.127.142:8848
+        namespace: ac169f42-69b0-4dea-be4f-c43848d5d115
+        group: cloudTest
+        import-check:
+          enabled: true
+
+---
+spring:
+  config:
+    import:
+      - nacos:provide.yaml
+    activate:
+      on-profile: dev
+

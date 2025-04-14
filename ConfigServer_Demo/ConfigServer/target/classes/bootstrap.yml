@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: ConfigServer
+  cloud:
+    config:
+      server:
+        git:
+          search-paths: props
+          uri: http://192.168.127.142:9009/bestgroup/testdev.git
+          username: testuser
+          password: mzyudada940940
+    nacos:
+      server-addr: 192.168.127.1:8848
+      discovery:
+        service: ${spring.application.name}
+        namespace: test
+        group: gitlab
+  profiles:
+    active: test

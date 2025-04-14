@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: ConfigClient
+  cloud:
+    nacos:
+      server-addr: 192.168.127.1:8848
+      discovery:
+        namespace: test
+        group: gitlab
+    config:
+      uri: http://192.168.127.142:8888
+      label: main
+      name: app-dev
+      profile: test
+  config:
+    import: configserver:http://192.168.127.142:8888
+  profiles:
+    active: test
+
