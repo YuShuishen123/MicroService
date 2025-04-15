@@ -1,0 +1,45 @@
+server:
+  port: 2525
+
+# 开启openfeign所在包的日志级别
+logging:
+  level:
+    microservice.consumer.feign: debug
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.127.142:8848
+        namespace: ac169f42-69b0-4dea-be4f-c43848d5d115
+        service: ${spring.application.name}
+        group: cloudTest
+      config:
+        server-addr: 192.168.127.142:8848
+        namespace: ac169f42-69b0-4dea-be4f-c43848d5d115
+        group: cloudTest
+        import-check:
+          enabled: true
+    loadbalancer:
+      nacos:
+        enabled: true
+    openfeign:
+      client:
+        config:
+          ProviderFeignClient:
+            connectTimeout: 2000
+            read-timeout: 7000
+#            loggerLevel: BASIC   日志等级已经在配置类当中设置
+
+---
+spring:
+  config:
+    import:
+      - nacos:consumer.yaml
+    activate:
+      on-profile: dev
+
