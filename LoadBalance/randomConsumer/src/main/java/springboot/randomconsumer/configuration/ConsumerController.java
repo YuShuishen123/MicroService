@@ -1,6 +1,7 @@
 package springboot.randomconsumer.configuration;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +19,15 @@ public class ConsumerController {
     public ConsumerController(ProviderFeignClient providerFeignClient) {
         this.providerFeignClient = providerFeignClient;
     }
-    @GetMapping("/test")
-    public String getAll(){
+    @Value("${a}")
+    private String a;
+    @GetMapping("/port")
+    public String getPort(){
         return providerFeignClient.getPort();
+    }
+
+    @GetMapping("/a")
+    public String getA(){
+        return providerFeignClient.getA() + "," + "the a from consumer:" + a;
     }
 }
