@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RefreshScope
 public class ConsumerController {
 
-
     ProviderFeignClient providerFeignClient;
     public ConsumerController(ProviderFeignClient providerFeignClient) {
         this.providerFeignClient = providerFeignClient;
