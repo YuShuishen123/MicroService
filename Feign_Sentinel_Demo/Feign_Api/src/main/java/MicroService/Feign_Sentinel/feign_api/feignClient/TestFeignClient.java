@@ -2,6 +2,7 @@ package MicroService.Feign_Sentinel.feign_api.feignClient;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 /**
@@ -10,5 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "provider")
 public interface TestFeignClient {
     @GetMapping("/provider/time")
-    String getTime();
+    String getTime(@RequestParam Long id);  // 确保参数作为 Query 传递
 }
+

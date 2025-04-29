@@ -19,8 +19,8 @@ public class TestController {
     }
 
     @GetMapping("/consumer/time")
-    public String getTime() {
-        return testService.getTime();
+    public String getTime(Long id) {
+        return testService.getTime(id);
     }
 
 }

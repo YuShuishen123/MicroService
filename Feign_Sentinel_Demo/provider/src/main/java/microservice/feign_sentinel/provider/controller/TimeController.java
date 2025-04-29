@@ -3,6 +3,7 @@ package microservice.feign_sentinel.provider.controller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -26,9 +27,11 @@ public class TimeController {
      * @return 当前时间的时分秒(24小时制)，格式如："14:30:45"
      */
     @GetMapping("/provider/time")
-    public String getTime() {
+    public String getTime(Long id) {
+        if(id == 1){
+            throw new RuntimeException("测试异常");
+        }
         // 获取端口号+当前时间并格式化为字符串
         return "端口号：" + this.serverPort + "，当前时间：" + LocalTime.now().format(TIME_FORMATTER);
-
     }
 }
