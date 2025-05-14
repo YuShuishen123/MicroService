@@ -32,7 +32,9 @@ public class TimeTailLoadBalancer implements ReactorServiceInstanceLoadBalancer 
 
             int second = LocalDateTime.now().getSecond();
             int tail = second % 10;
-            if (tail == 0) tail = 1;
+            if (tail == 0) {
+                tail = 1;
+            }
             int index = tail % 3;
 
             if (index >= serviceInstances.size()) {
