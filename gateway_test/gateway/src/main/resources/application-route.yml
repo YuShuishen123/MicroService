@@ -1,0 +1,62 @@
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        connect-timeout: 5000
+        response-timeout: 15s
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allow-credentials: true
+            allowed-headers: '*'
+            allowed-origins:
+              - "http://127.0.0.1:5500/"
+            allowed-methods: '*'
+      default-filters:
+        - RewritePath=/api/?(?<segment>.*), /${segment}
+        - AddResponseHeader=rsadd, 123
+      routes:
+        - id: global-order-group
+          uri: http://127.0.0.1:7071
+          predicates:
+            - Path=/api/order/**
+            - Weight=order, 30
+          filters:
+            - RewritePath=/[^/]+/?(?<remaining>.*), /${remaining}
+            - name: SpecialOrderFilterFactory
+
+        - id: global_group_user
+          uri: lb://groupUser
+          predicates:
+            - Path=/api/user/**
+            - Weight=user, 70
+          filters:
+            - RewritePath=/[^/]+/?(?<remaining>.*), /${remaining}
+
+        - id: prefix_path_route  # 隐藏url测试
+          uri: http://127.0.0.1:7074  # 目标服务地址
+          predicates:
+            - Path=/api/test1  # 匹配的路径
+          filters:
+            - PrefixPath=/x/y  # 添加目标服务所需的前缀
+
+        - id: encrypt-route # 加密测试路由
+          uri: http://127.0.0.1:7074
+          predicates:
+            - Path=/api/encrypt
+          filters:
+            - name: EncryptParam
+              args:
+                paramName: mydate
+                key: Xm7/Smy0tGzSmQRqLwmREA==
+
+
+        - id: decrypt-route  # 解密路由
+          uri: http://127.0.0.1:7074
+          predicates:
+            - Path=/api/decrypt
+          filters:
+            - name: DecryptParam
+              args:
+                paramName: mydate
+                key: Xm7/Smy0tGzSmQRqLwmREA==

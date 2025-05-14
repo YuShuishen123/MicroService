@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API测试工具</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f5f7fa;
+        color: #333;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+      }
+
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 500;
+      }
+
+      .api-section {
+        float: left;
+        width: calc(50% - 20px);
+        margin: 10px;
+        padding: 15px; /* 减小内边距 */
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+        min-height: 120px; /* 减小最小高度 */
+        box-sizing: border-box;
+      }
+
+      .api-section:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .api-title {
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 15px; /* 调整标题下方间距 */
+        color: #3498db;
+      }
+
+      .api-description {
+        color: #7f8c8d;
+        margin-bottom: 15px;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .api-url {
+        display: block;
+        font-family: "Courier New", Courier, monospace;
+        background-color: #f1f1f1;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        margin-bottom: 12px; /* 调整URL和按钮之间的间距 */
+        color: #2c3e50;
+        word-break: break-all;
+      }
+
+      .test-btn {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+        display: inline-block;
+      }
+
+      .test-btn:hover {
+        background-color: #2980b9;
+      }
+
+      .result-container {
+        clear: both;
+        margin-top: 30px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+      }
+
+      .result-title {
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom: 10px;
+        color: #2c3e50;
+      }
+
+      #result-content {
+        min-height: 200px;
+        max-height: 400px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 15px;
+        font-family: "Courier New", Courier, monospace;
+        white-space: pre-wrap;
+        border: 1px solid #ddd;
+      }
+
+      .loading {
+        color: #7f8c8d;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>API 测试工具</h1>
+
+      <div class="api-section">
+        <div class="api-title">GroupUser路由测试</div>
+        <div>
+          <span class="api-url">GET 127.0.0.1/api/user/getall</span>
+          <button
+            class="test-btn"
+            onclick="testApi('127.0.0.1/api/user/getall', 'GET')"
+          >
+            测试接口
+          </button>
+        </div>
+      </div>
+
+      <div class="api-section">
+        <div class="api-title">GroupOrder路由测试</div>
+        <div>
+          <span class="api-url">GET 127.0.0.1/api/order/getall</span>
+          <button
+            class="test-btn"
+            onclick="testApi('127.0.0.1/api/order/getall', 'GET')"
+          >
+            测试接口
+          </button>
+        </div>
+      </div>
+
+      <div class="api-section">
+        <div class="api-title">特殊GroupOrder2测试</div>
+        <div>
+          <span class="api-url">GET 127.0.0.1/api/order/orderspecial</span>
+          <button
+            class="test-btn"
+            onclick="testApiWithCookie('127.0.0.1/api/order/orderspecial', 'GET')"
+          >
+            测试接口
+          </button>
+        </div>
+      </div>
+
+      <div class="api-section">
+        <div class="api-title">测试隐藏url</div>
+        <div>
+          <span class="api-url">GET 127.0.0.1/api/test1</span>
+          <button
+            class="test-btn"
+            onclick="testApi('127.0.0.1/api/test1', 'GET')"
+          >
+            测试接口
+          </button>
+        </div>
+      </div>
+
+      <div class="api-section">
+        <div class="api-title">加解密参数测试</div>
+        <div>
+          <span class="api-url">POST 127.0.0.1/api/encrypt</span>
+          <button
+            class="test-btn"
+            onclick="testApiPost('127.0.0.1/api/encrypt', 'POST', {name:'余水深',number:2100150182})"
+          >
+            测试接口
+          </button>
+        </div>
+      </div>
+
+      <div class="result-container">
+        <div class="result-title">返回结果</div>
+        <div id="result-content">点击上方按钮测试接口，结果将显示在这里...</div>
+      </div>
+    </div>
+
+    <script>
+      function testApi(url, method) {
+        const resultElement = document.getElementById("result-content");
+        resultElement.innerHTML =
+          '<span class="loading">请求中，请稍候...</span>';
+
+        const fullUrl = url.startsWith("http") ? url : `http://${url}`;
+
+        fetch(fullUrl, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP错误! 状态码: ${response.status}`);
+            }
+            return response.text();
+          })
+          .then((text) => {
+            resultElement.innerHTML = text;
+          })
+          .catch((error) => {
+            resultElement.innerHTML = `请求失败: ${error.message}`;
+            console.error("请求错误:", error);
+          });
+      }
+
+      function testApiPost(url, method, data) {
+        const resultElement = document.getElementById("result-content");
+        resultElement.innerHTML =
+          '<span class="loading">请求中，请稍候...</span>';
+
+        const fullUrl = url.startsWith("http") ? url : `http://${url}`;
+
+        fetch(fullUrl, {
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP错误! 状态码: ${response.status}`);
+            }
+            return response.text();
+          })
+          .then((text) => {
+            resultElement.innerHTML = text;
+          })
+          .catch((error) => {
+            resultElement.innerHTML = `请求失败: ${error.message}`;
+            console.error("请求错误:", error);
+          });
+      }
+
+      function testApiWithCookie(url, method) {
+        const resultElement = document.getElementById("result-content");
+        resultElement.innerHTML =
+          '<span class="loading">请求中，请稍候...</span>';
+
+        const fullUrl = url.startsWith("http") ? url : `http://${url}`;
+
+        // 显式设置 Cookie，domain 匹配 127.0.0.1
+        document.cookie = "name=123; path=/; domain=127.0.0.1; SameSite=Lax";
+
+        console.log("正在发送请求到:", fullUrl);
+        console.log("当前 Cookie:", document.cookie);
+
+        fetch(fullUrl, {
+          method: method,
+          credentials: "include", // 确保携带 Cookie（包括跨端口）
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`HTTP错误! 状态码: ${response.status}`);
+            }
+            return response.text();
+          })
+          .then((text) => {
+            resultElement.innerHTML = text;
+          })
+          .catch((error) => {
+            resultElement.innerHTML = `请求失败: ${error.message}`;
+            console.error("请求错误:", error, error.stack);
+          });
+      }
+    </script>
+  </body>
+</html>

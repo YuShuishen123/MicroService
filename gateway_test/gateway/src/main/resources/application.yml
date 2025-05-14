@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: gateway
+  profiles:
+    include: route
+  cloud:
+    nacos:
+          discovery:
+            service: ${spring.application.name}
+            server-addr: 127.0.0.1:8848
+            namespace: public
+            group: DEFAULT_GROUP
+server:
+  port: 80

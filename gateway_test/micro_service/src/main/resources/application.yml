@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: micro-service
+  cloud:
+    nacos:
+      discovery:
+        service: ${spring.application.name}
+        server-addr: 127.0.0.1:8848
+        namespace: public
+        group: DEFAULT_GROUP
+server:
+  port: 8081
