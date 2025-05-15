@@ -23,7 +23,7 @@ spring:
             - Weight=order, 30
           filters:
             - RewritePath=/[^/]+/?(?<remaining>.*), /${remaining}
-            - name: SpecialOrderFilterFactory
+            - name: SpecialOrderFilterFactory  # 特殊订单判断路由
 
         - id: global_group_user
           uri: lb://groupUser
